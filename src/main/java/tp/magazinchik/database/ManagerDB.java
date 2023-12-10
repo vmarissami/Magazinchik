@@ -179,21 +179,23 @@ public class ManagerDB {
                              "WHERE sp.section_id = ?")) {
 
             statement.setInt(1, sectionId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String name = resultSet.getString("name");
-                    double price = resultSet.getDouble("price");
-                    productsInSection.add(new Product(id, name, price));
-                }
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double price = resultSet.getDouble("price");
+                productsInSection.add(new Product(id, name, price));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
+            productsInSection = null;
         }
 
-        return productsInSection;
+        return productsInSection.isEmpty() ? null : productsInSection;
     }
+
 
 
     public void editSection(int sectionId, String newName, String newWorkingHours) {
