@@ -17,6 +17,11 @@ public class Shop {
             magazinPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             magazinPanel.setLocationRelativeTo(null);
             magazinPanel.setVisible(true);
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Подключение закрыто.");
+                database.closeConnection();
+            }));
         });
     }
 }

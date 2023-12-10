@@ -15,8 +15,10 @@ public class ManagerDB {
     }
 
     private void createTables() {
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
-             Statement statement = connection.createStatement()) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(DATABASE_URL);
+            Statement statement = connection.createStatement();
 
             // Создание таблицы отделов
             statement.execute("CREATE TABLE IF NOT EXISTS sections (" +
@@ -39,6 +41,14 @@ public class ManagerDB {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -209,6 +219,13 @@ public class ManagerDB {
             statement.setInt(3, productId);
             statement.executeUpdate();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void closeConnection() {
+        try {
+            DriverManager.getConnection(DATABASE_URL).close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
